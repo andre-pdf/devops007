@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
   
  config.vm.define "controle" do |controle|
     controle.vm.box = "geerlingguy/debian9"
-    controle.vm.network "private_network", ip:"172.17.177.100"
+    controle.vm.network "public_network", ip:"192.168.0.230"
     controle.vm.hostname = "controle"
     controle.vm.provider "virtualbox" do |vb|
       vb.name = "controle"
@@ -106,7 +106,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "master" do |master|
     master.vm.box = "geerlingguy/centos7"
-    master.vm.network "private_network", ip:"172.17.177.110"
+    master.vm.network "public_network", ip:"192.168.0.220"
     master.vm.hostname = "master"
     master.vm.provider "virtualbox" do |vb|
       vb.name = "master"
@@ -116,10 +116,10 @@ Vagrant.configure("2") do |config|
     master.vm.synced_folder "./configs", "/var/configs", owner: "root", group: "root"
   end
  
-  (1..3).each do |i|
+  (1..2).each do |i|
     config.vm.define "node#{i}" do |node|
     node.vm.box = "geerlingguy/centos7"
-    node.vm.network "private_network", ip:"172.17.177.11#{i}"
+    node.vm.network "public_network", ip:"192.168.0.22#{i}"
     node.vm.hostname = "node#{i}"
     node.vm.provider "virtualbox" do |vb|
       vb.name = "nodes#{i}"
@@ -128,6 +128,33 @@ Vagrant.configure("2") do |config|
     end
   end
 end
+
+ config.vm.define "pupmaster" do |pupmaster|
+    pupmaster.vm.box = "geerlingguy/centos7"
+    pupmaster.vm.network "private_network", ip:"172.17.177.105"
+    pupmaster.vm.hostname = "pupmaster"
+    pupmaster.vm.provider "virtualbox" do |vb|
+      vb.name = "pupmaster"
+      vb.memory = "2048"
+      vb.cpus = 2
+    end
+  end
+
+  config.vm.define "pupagent" do |pupagent|
+    pupagent.vm.box = "geerlingguy/debian9"
+    pupagent.vm.network "private_network", ip:"172.17.177.106"
+    pupagent.vm.hostname = "pupagent"
+    pupagent.vm.provider "virtualbox" do |vb|
+      vb.name = "pupagent"
+      vb.memory = "1024"
+      vb.cpus = 2
+    end
+    pupagent.vm.provision "shell", inline: "apt update && apt install puppet -y"
+    pupagent.vm.provision "puppet" do |puppet|
+      puppet.manifests_path = "manifests"
+      puppet.manifest_file = "default.pp"
+    end
+  end
 
   config.group.groups = {
     "controle" => [

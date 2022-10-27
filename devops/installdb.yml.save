@@ -1,0 +1,40 @@
+---
+-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ hosts: datacenter
+  become: yes
+
+  tasks: 
+    - name: "Instalação dos pacotes para banco de dados"
+      apt: 
+        pkg: 
+          - mysql-server
+          - wget
+          - zip
+          - curl
+          - vim
+          - python-mysqldb
+        state: present
+        update_cache: yes
+    - name: "Download Arquivo .sql para importação do banco"
+      unarchive: 
+        src: "https://github.com/rogerramossilva/devops/raw/master/db.zip"
+        dest: /tmp
+        remote_src: yes
+
+

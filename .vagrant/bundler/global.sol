@@ -1,1 +1,1 @@
-{"dependencies":[["vagrant-group",["= 0.8.2"]]],"checksum":"6ef1215a1e50aea19c9e30b722facc9653724cace00f109be12c654bf46fd895","vagrant_version":"2.3.0"}
+{"dependencies":[["vagrant-group",["= 0.8.2"]]],"checksum":"6ef1215a1e50aea19c9e30b722facc9653724cace00f109be12c654bf46fd895","vagrant_version":"2.3.2"}
